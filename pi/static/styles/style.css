@@ -1,0 +1,54 @@
+body {
+  background-color: black;
+  height: 110vh;
+}
+
+/* Console */
+.consoleContainer {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+#console {
+  background-color: white;
+  font-family: monospace;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 150px;
+  padding: 0;
+  max-height: 0px;
+  transition: all 0.3s ease-in-out;
+}
+
+.consoleContainer.open #console {
+  padding: 0.2em;
+  max-height: 150px;
+}
+
+.consoleContainer > span {
+  text-align: center;
+  margin: auto;
+  display: block;
+  background-color: white;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  padding: 0.2em 1em;
+  border-radius: 0 0 5px 5px;
+  transform: translate(0, 99%);
+}
+
+/* Status Container */
+.statusContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  background-color: black;
+  color: lightgray;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: auto;
+}

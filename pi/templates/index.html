@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="an awesome webpage" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="author" />
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for("static", filename="/styles/style.css")}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for("static", filename="/styles/joy.css")}}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+    <script src="{{url_for("static", filename="/scripts/status.js")}}" defer></script>
+    <script src="{{url_for("static", filename="/scripts/joy.js")}}"></script>
+    <script src="{{url_for("static", filename="/scripts/index.js")}}" defer></script>
+  </head>
+  <body>
+    <div class="consoleContainer">
+      <div id="console">Hello World</div>
+      <span>⬇️</span>
+    </div>
+
+
+
+
+
+    <div class="joyContainer">
+        <div id="joyDiv" class="joystick">
+        </div>
+        <div class="statusContainer">
+          <span id="socketConnection">Socket Disconnected</span>
+          <span id="arduinoConnection">Arduino Disconnected</span>
+          <span id="piTemp">Pi Temp: N/A</span>
+        </div>
+        <div id="joy2Div" class="joystick" >
+        </div>
+      </div>
+    </body>
+</html>

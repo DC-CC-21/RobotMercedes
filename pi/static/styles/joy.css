@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.joyContainer {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+.joystick {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+  padding: 0.2em 0.5em;
+}
+
+canvas {
+  display: block;
+  width: 200px;
+  height: 200px;
+  background-color: black;
+  border-radius: 999px;
+  border: 5px solid silver;
+  box-shadow:0 0 10px inset white;
+}
