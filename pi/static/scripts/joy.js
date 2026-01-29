@@ -148,14 +148,13 @@ class Joystick {
     }
 
     const touch = event?.touches?.[this.touchIndex];
-    const x = touch.clientX || event.clientX;
-    const y = touch.clientY || event.clientY;
+    const x = touch?.clientX || event.clientX;
+    const y = touch?.clientY || event.clientY;
 
     this.boundingBox = this.canvas.getBoundingClientRect();
     console.Log(
       `${this.boundingBox.top}, ${this.containerElement.getBoundingClientRect().top}`,
     );
-    console.log(event?.touches?.[this.touchIndex]);
 
     return {
       x: x - this.boundingBox.left,

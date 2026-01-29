@@ -1,3 +1,4 @@
+import time
 import flask_socketio
 from flask import Flask, render_template
 from random import randint
@@ -5,6 +6,7 @@ import Serial_Connection as sc
 
 app = Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
+
 Serial = sc.Serial_Connection()
 Serial.begin(19200, port="COM3")
 
@@ -44,7 +46,7 @@ def arduino_status():
         else:
             # If communication is not successful, restart the serial connection
             Serial.close()
-            Serial.begin(19200, port="COM4")
+            Serial.begin(19200, port="COM3")
             socketio.emit(
                 "arduino_status",
                 {"connected": Serial.communication_status},
@@ -52,9 +54,31 @@ def arduino_status():
             socketio.sleep(5)
 
 
+def sensor_data():
+    print("Sensor Socket Started")
+    while True:
+        Serial.write("S")
+        data = Serial.read()
+        [_, ax, ay, az, gx, gy, gz] = data.split(" ")
+
+        socketio.emit(
+            "sensor_data",
+            {
+                "accelerometer": {
+                    "x": ax,
+                    "y": ay,
+                    "z": az,
+                },
+                "gyro": {"x": gx, "y": gy, "z": gz},
+            },
+        )
+        time.sleep(0.1)
+
+
 def main():
     socketio.start_background_task(target=mock_pi_temp)
     socketio.start_background_task(target=arduino_status)
+    socketio.start_background_task(target=sensor_data)
     socketio.run(app, host="0.0.0.0", port=5050, debug=False)
 
 
