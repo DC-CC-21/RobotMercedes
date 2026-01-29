@@ -3,12 +3,17 @@ import flask_socketio
 from flask import Flask, render_template
 from random import randint
 import Serial_Connection as sc
+import serial.tools.list_ports
+from gpiozero import CPUTemperature
 
+# Server Setup
 app = Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
 
+# Serial Connection
+all_ports = serial.tools.list_ports.comports()
 Serial = sc.Serial_Connection()
-Serial.begin(19200, port="COM3")
+Serial.begin(19200, port=all_ports[0].device)
 
 
 @app.route("/")
@@ -19,6 +24,7 @@ def index():
 @socketio.on("connect")
 def handle_connect():
     print("Client connected")
+    socketio.emit("ports", {"ports": [i.device for i in all_ports]})
 
 
 @socketio.on("joystick_data")
@@ -28,9 +34,10 @@ def handle_joy1(data):
     Serial.write(f"M {x} {y}")
 
 
-def mock_pi_temp():
+def pi_temp():
+    cpu_temp = CPUTemperature()
     while True:
-        socketio.emit("pi_temp", {"temperature": randint(30, 90)})
+        socketio.emit("pi_temp", {"temperature": cpu_temp.temperature})
         socketio.sleep(1)
 
 
@@ -46,7 +53,7 @@ def arduino_status():
         else:
             # If communication is not successful, restart the serial connection
             Serial.close()
-            Serial.begin(19200, port="COM3")
+            Serial.begin(19200, port=all_ports[0].device)
             socketio.emit(
                 "arduino_status",
                 {"connected": Serial.communication_status},
@@ -76,7 +83,7 @@ def sensor_data():
 
 
 def main():
-    socketio.start_background_task(target=mock_pi_temp)
+    socketio.start_background_task(target=pi_temp)
     socketio.start_background_task(target=arduino_status)
     socketio.start_background_task(target=sensor_data)
     socketio.run(app, host="0.0.0.0", port=5050, debug=False)

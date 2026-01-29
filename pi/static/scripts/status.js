@@ -1,5 +1,6 @@
 const socketConnectionEl = document.getElementById("socketConnection");
 const arduinoConnection = document.getElementById("arduinoConnection");
+const portsEl = document.getElementById("ports");
 const piTempEl = document.getElementById("piTemp");
 
 // Sensor Data
@@ -21,6 +22,16 @@ socket.on("arduino_status", (data) => {
   } else {
     arduinoConnection.innerText = "Arduino Disconnected";
   }
+});
+socket.on("ports", (data) => {
+  console.log(data);
+  for (let i of data.ports) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.innerHTML = i;
+    portsEl.append(option);
+  }
+  portsEl.firstChild.selected = true;
 });
 socket.on("pi_temp", (data) => {
   if (data.temperature) {
