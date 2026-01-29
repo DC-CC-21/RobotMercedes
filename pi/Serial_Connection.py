@@ -52,9 +52,7 @@ class Serial_Connection:
             )
 
     def write(self, data: str):
-        print(self._serial.is_open)
         if self._serial.is_open:
-            logging.info(f"Writing data to serial port: {data}")
             try:
                 self._serial.write(f"{data}\n".encode())
             except Exception:
