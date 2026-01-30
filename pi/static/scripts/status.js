@@ -8,6 +8,10 @@ const accelerometerEl = document.getElementById("accelerometer");
 const gyroEl = document.getElementById("gyro");
 const socket = io.connect("/");
 
+// Buttons
+const lightsBtn = document.getElementById("lights")
+const lightbarBtn = document.getElementById("lightbar")
+
 socket.on("connect", () => {
   socketConnectionEl.innerText = "Socket Connected";
 });
@@ -46,3 +50,21 @@ socket.on("sensor_data", (data) => {
     gyroEl.innerText = `X: ${data.gyro.x}, Y: ${data.gyro.y}, Z: ${data.gyro.z}`;
   }
 });
+
+let lightsOn = false;
+lightsBtn.addEventListener("click", (e) => {
+  e.target.classList.toggle("on")
+  lightsOn = !lightsOn;
+  socket.emit("lights", {
+    lights_on:lightsOn
+  })
+})
+
+let lightbarOn = false;
+lightbarBtn.addEventListener("click", (e) => {
+  e.target.classList.toggle("on")
+  lightbarOn = !lightbarOn;
+  socket.emit("lightbar", {
+    lightbar_on:lightbarOn
+  })
+})

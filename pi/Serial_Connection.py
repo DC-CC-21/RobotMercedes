@@ -16,15 +16,19 @@ class Serial_Connection:
     connection_established = False
     communication_status = False
 
-    def __init__(self) -> None:
+    def __init__(self, baudrate, port, name) -> None:
         try:
+            self.name = f"[{name}]:[{port}]"
             logging.info("Initializing serial connection...")
-            self._serial = serial.Serial()
+            self._serial = serial.Serial(
+                baudrate=baudrate,
+                port=port
+            )
             time.sleep(2)
-            logging.info("Serial connection successful")
+            logging.info(f"Serial connection {self.name} successful")
             self.connection_established = True
         except Exception as e:
-            logging.error(f"Error initializing serial connection: {e}")
+            logging.error(f"Error initializing serial connection with {self.name}: {e}")
 
     def begin(self, baudrate, timeout=_timeout, port="COM3"):
         logging.info("Updating serial parameters...")
@@ -56,7 +60,7 @@ class Serial_Connection:
             try:
                 self._serial.write(f"{data}\n".encode())
             except Exception:
-                logging.error("Error writing data to serial port.")
+                logging.error(f"Error writing data to {self.name}.")
                 self.communication_status = False
 
     def read(self) -> str:
@@ -65,12 +69,12 @@ class Serial_Connection:
             value = self._serial.readline().decode().strip()
             # while value is None or value == "":
             return value
-        return "No data - Serial port is not open."
+        return f"No data - {self.name} is not open."
 
     def close(self):
         if self._serial.is_open:
             self._serial.close()
-            logging.info("Serial connection closed.")
+            logging.info(f"Serial connection with {self.name} closed.")
 
 
 def main():
